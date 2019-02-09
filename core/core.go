@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	"github.com/bahelms/noted/config"
@@ -11,6 +12,7 @@ import (
 
 // OpenFile opens a file
 func OpenFile(cfg config.Config, filename string) string {
+	// setup file
 	ensureLocalStorage(cfg)
 	fp := config.LocalFilePath(cfg, ensureExtension(filename))
 	if _, err := os.Stat(fp); os.IsNotExist(err) {
@@ -19,12 +21,16 @@ func OpenFile(cfg config.Config, filename string) string {
 		}
 	}
 
-	// set watcher on filepath
-	// open file with nvim
-	// cmd := exec.Command("nvim")
-	// if err := cmd.Run(); err != nil {
-	// 	log.Fatal("nvim errored:", err)
-	// }
+	// set watcher on file
+
+	// open text editor
+	editor := "nvim"
+	cmd := exec.Command(editor, fp)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	if err := cmd.Run(); err != nil {
+		log.Fatalf("%s errored: %s", editor, err)
+	}
 	return filename
 }
 
