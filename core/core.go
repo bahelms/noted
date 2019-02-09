@@ -11,7 +11,7 @@ import (
 )
 
 // OpenFile opens a file
-func OpenFile(cfg config.Config, filename string) string {
+func OpenFile(cfg config.Config, filename string) {
 	// setup file
 	ensureLocalStorage(cfg)
 	fp := config.LocalFilePath(cfg, ensureExtension(filename))
@@ -31,7 +31,6 @@ func OpenFile(cfg config.Config, filename string) string {
 	if err := cmd.Run(); err != nil {
 		log.Fatalf("%s errored: %s", editor, err)
 	}
-	return filename
 }
 
 func ensureLocalStorage(cfg config.Config) {
