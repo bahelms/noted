@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/bahelms/noted/config"
 	"github.com/bahelms/noted/core"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -19,7 +20,8 @@ var rootCmd = &cobra.Command{
 	Long:  `Noted tracks your text files locally and syncs them remotely in S3`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
-			core.OpenFile(args[0])
+			cfg := config.Config{LocalStorageDir: ".noted"}
+			core.OpenFile(cfg, args[0])
 		} else {
 			cmd.Help()
 		}
