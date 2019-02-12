@@ -18,9 +18,10 @@ var rootCmd = &cobra.Command{
 	Use:   "noted",
 	Short: "Noted is a distributed file tracker",
 	Long:  `Noted tracks your text files locally and syncs them remotely in S3`,
+	Args:  cobra.ArbitraryArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
-			cfg := config.Config{LocalStorageDir: ".noted"}
+			cfg := config.Config{LocalStorageDir: ".noted", Editor: "nvim"}
 			core.OpenFile(cfg, args[0])
 		} else {
 			cmd.Help()

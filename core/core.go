@@ -32,6 +32,12 @@ func OpenFile(cfg config.Config, filename string) {
 	}
 }
 
+// DeleteFile removes the specified file locally
+func DeleteFile(cfg config.Config, filename string) {
+	fp := config.LocalFilePath(cfg, ensureExtension(filename))
+	os.Remove(fp)
+}
+
 func ensureLocalStorage(cfg config.Config) {
 	localStorage := config.LocalStorage(cfg)
 	if _, err := os.Stat(localStorage); os.IsNotExist(err) {
