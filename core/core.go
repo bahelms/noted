@@ -24,12 +24,11 @@ func OpenFile(cfg config.Config, filename string) {
 	// set watcher on file
 
 	// open text editor
-	editor := "nvim"
-	cmd := exec.Command(editor, fp)
+	cmd := exec.Command(cfg.Editor, fp)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	if err := cmd.Run(); err != nil {
-		log.Fatalf("%s errored: %s", editor, err)
+		log.Fatalf("%s errored: %s", cfg.Editor, err)
 	}
 }
 

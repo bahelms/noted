@@ -11,7 +11,10 @@ import (
 	"github.com/bahelms/noted/core"
 )
 
-var cfg = config.Config{LocalStorageDir: ".noted_tests"}
+var cfg = config.Config{
+	LocalStorageDir: ".noted_tests",
+	Editor:          "cat",
+}
 var openFileCases = []struct {
 	input    string
 	expected string

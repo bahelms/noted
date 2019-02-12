@@ -8,6 +8,7 @@ import (
 // Config holds runtime information
 type Config struct {
 	LocalStorageDir string
+	Editor          string
 }
 
 // LocalStorage returns the absolute path of the directory used to store files locally
