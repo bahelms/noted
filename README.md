@@ -31,3 +31,4 @@ Refactor
 - use `homedir "github.com/mitchellh/go-homedir"` instead of `"os/user"`
 - move Config to cmd package
 - take config from yaml file
+- customize `list` logging
