@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -24,10 +25,10 @@ func OpenFile(cfg config.Config, filename string) {
 	// set watcher on file
 
 	// open text editor
-	cmd := exec.Command(cfg.Editor, fp)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	if err := cmd.Run(); err != nil {
+	externalCommand := exec.Command(cfg.Editor, fp)
+	externalCommand.Stdin = os.Stdin
+	externalCommand.Stdout = os.Stdout
+	if err := externalCommand.Run(); err != nil {
 		log.Fatalf("%s errored: %s", cfg.Editor, err)
 	}
 }
@@ -36,6 +37,14 @@ func OpenFile(cfg config.Config, filename string) {
 func DeleteFile(cfg config.Config, filename string) {
 	fp := config.LocalFilePath(cfg, ensureExtension(filename))
 	os.Remove(fp)
+}
+
+// ListFiles prints all local files to STDOUT
+func ListFiles(cfg config.Config) {
+	files, _ := ioutil.ReadDir(config.LocalStorage(cfg))
+	for _, file := range files {
+		log.Println(file.Name())
+	}
 }
 
 func ensureLocalStorage(cfg config.Config) {

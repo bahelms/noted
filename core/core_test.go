@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/bahelms/noted/config"
@@ -25,6 +27,23 @@ var fileCases = []struct {
 	{"file.any", "file.any", "radical"},
 }
 
+func createLocalFile(filename string) string {
+	fp := config.LocalFilePath(cfg, filename)
+	_, err := os.Create(fp)
+	if err != nil {
+		fmt.Printf("Create error: %s -- %v", fp, err)
+	}
+	return fp
+}
+
+func captureOutput(fn func()) string {
+	var buf bytes.Buffer
+	log.SetOutput(&buf)
+	fn()
+	log.SetOutput(os.Stdout)
+	return buf.String()
+}
+
 func TestOpenFileCreatesNonExistantFilesLocally(t *testing.T) {
 	for _, c := range fileCases {
 		fp := config.LocalFilePath(cfg, c.expected)
@@ -43,7 +62,7 @@ func TestOpenFileDoesNotCreateFilesIfTheyExist(t *testing.T) {
 		fp := config.LocalFilePath(cfg, c.expected)
 		err := ioutil.WriteFile(fp, expected, 0664)
 		if err != nil {
-			fmt.Printf("WriteFile error: %s -- %v", fp, err)
+			t.Errorf("WriteFile error: %s -- %v", fp, err)
 		}
 
 		core.OpenFile(cfg, c.input)
@@ -55,20 +74,26 @@ func TestOpenFileDoesNotCreateFilesIfTheyExist(t *testing.T) {
 }
 
 func TestDeleteFileRemovesLocallyStoredFile(t *testing.T) {
-	for _, c := range fileCases {
-		fp := config.LocalFilePath(cfg, c.expected)
-		_, err := os.Create(fp)
-		if err != nil {
-			fmt.Printf("Create error: %s -- %v", fp, err)
-		}
+	for _, testCase := range fileCases {
+		path := createLocalFile(testCase.expected)
 
-		core.DeleteFile(cfg, c.input)
-		if _, err := os.Stat(fp); os.IsExist(err) {
-			t.Errorf("%s was not deleted.", fp)
+		core.DeleteFile(cfg, testCase.input)
+		if _, err := os.Stat(path); os.IsExist(err) {
+			t.Errorf("%s was not deleted.", path)
 		}
 	}
 }
 
-func TestDeleteFileHandlesNonExistentFile(t *testing.T) {
-	core.DeleteFile(cfg, "unknown")
+func TestListFilesPrintsAllLocalFilesToStdout(t *testing.T) {
+	for _, testCase := range fileCases {
+		createLocalFile(testCase.expected)
+	}
+	expected := "file.txt"
+
+	output := captureOutput(func() {
+		core.ListFiles(cfg)
+	})
+	if !strings.Contains(output, expected) {
+		t.Errorf("Actual %s -- expected %s", output, expected)
+	}
 }
