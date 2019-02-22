@@ -10,7 +10,7 @@ import (
 var delCmd = &cobra.Command{
 	Use:   "del",
 	Short: "Removes files locally and remotely",
-	Long:  "Removes files locally and remotely",
+	Long:  "Long Description",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			cfg := config.Config{LocalStorageDir: ".noted"}
