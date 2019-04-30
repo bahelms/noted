@@ -25,10 +25,10 @@ func OpenFile(cfg config.Config, filename string) {
 	// set watcher on file
 
 	// open text editor
-	externalCommand := exec.Command(cfg.Editor, fp)
-	externalCommand.Stdin = os.Stdin
-	externalCommand.Stdout = os.Stdout
-	if err := externalCommand.Run(); err != nil {
+	cmd := exec.Command(cfg.Editor, fp)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	if err := cmd.Run(); err != nil {
 		log.Fatalf("%s errored: %s", cfg.Editor, err)
 	}
 }

@@ -7,6 +7,7 @@ Distributed notes using your favorite editor
 - Create/open local files
 - Delete local files
 - List local files
+- Rename files
 
 #### TODO
 
@@ -19,6 +20,12 @@ Distributed notes using your favorite editor
   - sync local/remote files
 - add `track` command:
   - add file to local and remote storage
+- add `rename` command:
+  - change name of a file locally/remotely
+- add `archive` command:
+  - tags a file as "archived"
+  - "archived" files don't show on `list` by default
+  - add option to `list` to show "archived" files
 
 sync workflow
 
