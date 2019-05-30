@@ -15,7 +15,7 @@ import (
 func OpenFile(cfg config.Config, filename string) {
 	// setup file
 	ensureLocalStorage(cfg)
-	fp := config.LocalFilePath(cfg, ensureExtension(filename))
+	fp := cfg.LocalFilePath(ensureExtension(filename))
 	if _, err := os.Stat(fp); os.IsNotExist(err) {
 		if _, err := os.Create(fp); err != nil {
 			log.Fatalf("Failed creating %s -- %s", fp, err)
@@ -35,20 +35,20 @@ func OpenFile(cfg config.Config, filename string) {
 
 // DeleteFile removes the specified file locally
 func DeleteFile(cfg config.Config, filename string) {
-	fp := config.LocalFilePath(cfg, ensureExtension(filename))
+	fp := cfg.LocalFilePath(ensureExtension(filename))
 	os.Remove(fp)
 }
 
 // ListFiles prints all local files to STDOUT
 func ListFiles(cfg config.Config) {
-	files, _ := ioutil.ReadDir(config.LocalStorage(cfg))
+	files, _ := ioutil.ReadDir(cfg.LocalStorage())
 	for _, file := range files {
 		log.Println(file.Name())
 	}
 }
 
 func ensureLocalStorage(cfg config.Config) {
-	localStorage := config.LocalStorage(cfg)
+	localStorage := cfg.LocalStorage()
 	if _, err := os.Stat(localStorage); os.IsNotExist(err) {
 		os.Mkdir(localStorage, os.ModePerm)
 	}

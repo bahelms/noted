@@ -1,8 +1,9 @@
 package config
 
 import (
-	"os/user"
 	"path/filepath"
+
+	"github.com/mitchellh/go-homedir"
 )
 
 // Config holds runtime information
@@ -12,12 +13,12 @@ type Config struct {
 }
 
 // LocalStorage returns the absolute path of the directory used to store files locally
-func LocalStorage(cfg Config) string {
-	var usr, _ = user.Current()
-	return filepath.Join(usr.HomeDir, cfg.LocalStorageDir)
+func (cfg *Config) LocalStorage() string {
+	home, _ := homedir.Dir()
+	return filepath.Join(home, cfg.LocalStorageDir)
 }
 
 // LocalFilePath returns the absolute path of the file in local storage
-func LocalFilePath(cfg Config, filename string) string {
-	return filepath.Join(LocalStorage(cfg), filename)
+func (cfg *Config) LocalFilePath(filename string) string {
+	return filepath.Join(cfg.LocalStorage(), filename)
 }
