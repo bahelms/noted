@@ -28,7 +28,7 @@ var fileCases = []struct {
 }
 
 func createLocalFile(filename string) string {
-	fp := config.LocalFilePath(cfg, filename)
+	fp := cfg.LocalFilePath(filename)
 	_, err := os.Create(fp)
 	if err != nil {
 		fmt.Printf("Create error: %s -- %v", fp, err)
@@ -46,7 +46,7 @@ func captureOutput(fn func()) string {
 
 func TestOpenFileCreatesNonExistantFilesLocally(t *testing.T) {
 	for _, c := range fileCases {
-		fp := config.LocalFilePath(cfg, c.expected)
+		fp := cfg.LocalFilePath(c.expected)
 		os.Remove(fp)
 
 		core.OpenFile(cfg, c.input)
@@ -59,7 +59,7 @@ func TestOpenFileCreatesNonExistantFilesLocally(t *testing.T) {
 func TestOpenFileDoesNotCreateFilesIfTheyExist(t *testing.T) {
 	for _, c := range fileCases {
 		expected := []byte(c.content)
-		fp := config.LocalFilePath(cfg, c.expected)
+		fp := cfg.LocalFilePath(c.expected)
 		err := ioutil.WriteFile(fp, expected, 0664)
 		if err != nil {
 			t.Errorf("WriteFile error: %s -- %v", fp, err)

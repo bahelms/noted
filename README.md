@@ -2,21 +2,20 @@
 
 Distributed notes using your favorite editor
 
-## Features
+## Current Features
 
 - Create/open local files
 - Delete local files
 - List local files
-- Rename files
 
 #### TODO
 
 - opening files:
   - handle remote storage
   - watch file changes and update remote file
-- deleting files:
+- `del` command:
   - delete from remote storage
-- add `list` command:
+- `list` command:
   - sync local/remote files
 - add `track` command:
   - add file to local and remote storage
@@ -35,7 +34,6 @@ sync workflow
 
 Refactor
 
-- use `homedir "github.com/mitchellh/go-homedir"` instead of `"os/user"`
 - move Config to cmd package
 - take config from yaml file
 - customize `list` logging
