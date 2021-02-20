@@ -85,17 +85,17 @@ func TestDeleteFileRemovesLocallyStoredFile(t *testing.T) {
 }
 
 func TestListFilesPrintsAllLocalFilesToStdout(t *testing.T) {
-	var expected_files [2]string
+	var expectedFiles [2]string
 	for i, testCase := range fileCases {
 		createLocalFile(testCase.expected)
-		expected_files[i] = testCase.expected
+		expectedFiles[i] = testCase.expected
 	}
 
 	output := captureOutput(func() {
 		core.ListFiles(cfg)
 	})
 
-	for _, expected := range expected_files {
+	for _, expected := range expectedFiles {
 		if !strings.Contains(output, expected) {
 			t.Errorf("Actual %s -- expected %s", output, expected)
 		}

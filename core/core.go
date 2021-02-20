@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 	"path/filepath"
 
 	"github.com/bahelms/noted/config"
@@ -43,7 +44,10 @@ func DeleteFile(cfg config.Config, filename string) {
 func ListFiles(cfg config.Config) {
 	files, _ := ioutil.ReadDir(config.LocalStorage(cfg))
 	for _, file := range files {
-		log.Println(file.Name())
+		log.SetFlags(0)
+		ts := file.ModTime().Format("01/02/2006")
+		name := strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
+		log.Printf("%s - %s\n", ts, name)
 	}
 }
 
