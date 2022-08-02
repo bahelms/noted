@@ -27,6 +27,15 @@ var fileCases = []struct {
 	{"file.any", "file.any", "radical"},
 }
 
+var listFilesCases = []struct {
+	input    string
+	expected string
+	content  string
+}{
+	{"file", "file", "awesome"},
+	{"file.any", "file", "radical"},
+}
+
 func createLocalFile(filename string) string {
 	fp := cfg.LocalFilePath(filename)
 	_, err := os.Create(fp)
@@ -86,7 +95,7 @@ func TestDeleteFileRemovesLocallyStoredFile(t *testing.T) {
 
 func TestListFilesPrintsAllLocalFilesToStdout(t *testing.T) {
 	var expectedFiles [2]string
-	for i, testCase := range fileCases {
+	for i, testCase := range listFilesCases {
 		createLocalFile(testCase.expected)
 		expectedFiles[i] = testCase.expected
 	}
