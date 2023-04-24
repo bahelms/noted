@@ -36,13 +36,13 @@ var listFilesCases = []struct {
 	{"file.any", "file", "radical"},
 }
 
-func createLocalFile(filename string) string {
-	fp := cfg.LocalFilePath(filename)
-	_, err := os.Create(fp)
+func createLocalFile(filename string, contents string) string {
+	path := cfg.LocalFilePath(filename)
+	err := os.WriteFile(path, []byte(contents), 0644)
 	if err != nil {
-		fmt.Printf("Create error: %s -- %v", fp, err)
+		fmt.Printf("Create error: %s -- %v", path, err)
 	}
-	return fp
+	return path
 }
 
 func captureOutput(fn func()) string {
@@ -84,7 +84,7 @@ func TestOpenFileDoesNotCreateFilesIfTheyExist(t *testing.T) {
 
 func TestDeleteFileRemovesLocallyStoredFile(t *testing.T) {
 	for _, testCase := range fileCases {
-		path := createLocalFile(testCase.expected)
+		path := createLocalFile(testCase.expected, "")
 
 		core.DeleteFile(cfg, testCase.input)
 		if _, err := os.Stat(path); os.IsExist(err) {
@@ -96,7 +96,7 @@ func TestDeleteFileRemovesLocallyStoredFile(t *testing.T) {
 func TestListFilesPrintsAllLocalFilesToStdout(t *testing.T) {
 	var expectedFiles [2]string
 	for i, testCase := range listFilesCases {
-		createLocalFile(testCase.expected)
+		createLocalFile(testCase.expected, "")
 		expectedFiles[i] = testCase.expected
 	}
 

@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"strings"
 	"path/filepath"
+	"strings"
 
 	"github.com/bahelms/noted/config"
 )
@@ -24,13 +24,16 @@ func OpenFile(cfg config.Config, filename string) {
 	}
 
 	// set watcher on file
+	fileWatcher := InitFileWatcher(fp)
+	go fileWatcher.run()
+	defer fileWatcher.stop()
 
 	// open text editor
 	cmd := exec.Command(cfg.Editor, fp)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	if err := cmd.Run(); err != nil {
-		log.Fatalf("%s errored: %s", cfg.Editor, err)
+		log.Panicf("%s Command failed - errored: %s", cfg.Editor, err)
 	}
 }
 
