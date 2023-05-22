@@ -55,7 +55,7 @@ func (self *fileWatcher) checkFile() {
 	contents := string(bytes)
 	if contents != self.FileContents {
 		self.FileContents = contents
-		//     save to S3
+		commitFile(self.filePath)
 	}
 }
 
