@@ -10,6 +10,8 @@ import (
 type Config struct {
 	LocalStorageDir string
 	Editor          string
+	AwsProfile      string
+	S3BucketName    string
 }
 
 // LocalStorage returns the absolute path of the directory used to store files locally

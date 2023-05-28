@@ -24,7 +24,7 @@ func OpenFile(cfg config.Config, filename string) {
 	}
 
 	// set watcher on file
-	fileWatcher := InitFileWatcher(fp)
+	fileWatcher := InitFileWatcher(fp, cfg)
 	go fileWatcher.run()
 	defer fileWatcher.stop()
 
@@ -52,6 +52,10 @@ func ListFiles(cfg config.Config) {
 		name := strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
 		log.Printf("%s - %s\n", ts, name)
 	}
+}
+
+func SyncFiles(cfg config.Config) {
+	downloadAllFiles(cfg)
 }
 
 func ensureLocalStorage(cfg config.Config) {
