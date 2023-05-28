@@ -5,6 +5,8 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"github.com/bahelms/noted/config"
 )
 
 type fileWatcher struct {
@@ -12,14 +14,15 @@ type fileWatcher struct {
 	filePath     string
 	done         chan bool
 	waitGroup    sync.WaitGroup
+	config       config.Config
 }
 
-func InitFileWatcher(filePath string) fileWatcher {
+func InitFileWatcher(filePath string, config config.Config) fileWatcher {
 	contents, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Fatalf("File could not be read: %s", filePath)
 	}
-	return fileWatcher{FileContents: string(contents), filePath: filePath, done: make(chan bool)}
+	return fileWatcher{FileContents: string(contents), filePath: filePath, config: config, done: make(chan bool)}
 }
 
 func (self *fileWatcher) run() {
@@ -55,7 +58,7 @@ func (self *fileWatcher) checkFile() {
 	contents := string(bytes)
 	if contents != self.FileContents {
 		self.FileContents = contents
-		commitFile(self.filePath)
+		commitFile(self.filePath, self.config)
 	}
 }
 
