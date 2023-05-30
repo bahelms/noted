@@ -11,7 +11,7 @@ var syncCmd = &cobra.Command{
 	Short: "Replace local files with files stored externally",
 	Long:  "External storage is the source of truth. When running `sync`, all external files will be pulled down locally, creating new files or overwriting existing ones.",
 	Run: func(cmd *cobra.Command, args []string) {
-		cfg := config.Config{LocalStorageDir: ".noted", AwsProfile: "default", S3BucketName: "noted-file-storage"}
+		cfg := config.New()
 		core.SyncFiles(cfg)
 	},
 }

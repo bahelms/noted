@@ -12,7 +12,7 @@ var listCmd = &cobra.Command{
 	Short: "Display all tracked files",
 	Long:  "Long Description",
 	Run: func(cmd *cobra.Command, args []string) {
-		cfg := config.Config{LocalStorageDir: ".noted"}
+		cfg := config.New()
 		core.ListFiles(cfg)
 	},
 }

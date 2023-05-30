@@ -21,7 +21,7 @@ var rootCmd = &cobra.Command{
 	Args:  cobra.ArbitraryArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
-			cfg := config.Config{LocalStorageDir: ".noted", Editor: "nvim"}
+			cfg := config.New()
 			core.OpenFile(cfg, args[0])
 		} else {
 			cmd.Help()

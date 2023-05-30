@@ -14,6 +14,10 @@ type Config struct {
 	S3BucketName    string
 }
 
+func New() Config {
+	return Config{LocalStorageDir: ".noted", Editor: "nvim", AwsProfile: "noted", S3BucketName: "noted-file-storage"}
+}
+
 // LocalStorage returns the absolute path of the directory used to store files locally
 func (cfg *Config) LocalStorage() string {
 	home, _ := homedir.Dir()

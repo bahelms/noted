@@ -13,7 +13,7 @@ var delCmd = &cobra.Command{
 	Long:  "Long Description",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
-			cfg := config.Config{LocalStorageDir: ".noted"}
+			cfg := config.New()
 			core.DeleteFile(cfg, args[0])
 		} else {
 			cmd.Help()
