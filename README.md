@@ -11,8 +11,6 @@ Distributed notes using your favorite editor (Neovim, of course)
 
 #### TODO
 
-- `sync`
-    - locals not in remote are pushed
 - `list` command:
     - sync first
     - sort by latest modified first
