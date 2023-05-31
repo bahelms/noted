@@ -67,7 +67,6 @@ func s3Client(session *session.Session) *s3.S3 {
 func objectsInBucket(client *s3.S3, cfg config.Config) (*s3.ListObjectsV2Output, error) {
 	objects, err := client.ListObjectsV2(&s3.ListObjectsV2Input{
 		Bucket: aws.String(cfg.S3BucketName),
-		// Prefix: aws.String(""),
 	})
 	if err != nil {
 		fmt.Printf("Couldn't retrieve bucket items: %v", err)
@@ -105,6 +104,20 @@ func downloadFile(filepath string, objectKey string, bucketName string, sess *se
 	)
 	if err != nil {
 		fmt.Printf("Error downloading file: %v", err)
+	}
+}
+
+func deleteExternalFile(cfg config.Config, filename string) {
+	sess := awsSession(cfg.AwsProfile)
+	client := s3Client(sess)
+	_, err := client.DeleteObject(
+		&s3.DeleteObjectInput{
+			Bucket: aws.String(cfg.S3BucketName),
+			Key:    aws.String(filename),
+		},
+	)
+	if err != nil {
+		fmt.Printf("Error deleting remote file: %v", err)
 	}
 }
 

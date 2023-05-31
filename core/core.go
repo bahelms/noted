@@ -39,8 +39,10 @@ func OpenFile(cfg config.Config, filename string) {
 
 // DeleteFile removes the specified file locally
 func DeleteFile(cfg config.Config, filename string) {
-	fp := cfg.LocalFilePath(ensureExtension(filename))
+	filename = ensureExtension(filename)
+	fp := cfg.LocalFilePath(filename)
 	os.Remove(fp)
+	deleteExternalFile(cfg, filename)
 }
 
 // ListFiles prints all local files to STDOUT
