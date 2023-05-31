@@ -4,17 +4,15 @@ Distributed notes using your favorite editor (Neovim, of course)
 
 ## Current Features
 
-- Create/open local/remote files
+- Create files
 - Sync files
-- Delete local files
+- Delete files
 - List local files
 
 #### TODO
 
 - `sync`
     - locals not in remote are pushed
-- `del` command:
-  - delete from remote storage
 - `list` command:
     - sync first
     - sort by latest modified first
