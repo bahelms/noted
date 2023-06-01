@@ -57,7 +57,7 @@ func ListFiles(cfg config.Config) {
 }
 
 func SyncFiles(cfg config.Config) {
-	downloadAllFiles(cfg)
+	downloadRemoteFiles(cfg)
 }
 
 func ensureLocalStorage(cfg config.Config) {

@@ -75,7 +75,7 @@ func objectsInBucket(client *s3.S3, cfg config.Config) (*s3.ListObjectsV2Output,
 	return objects, nil
 }
 
-func downloadAllFiles(cfg config.Config) {
+func downloadRemoteFiles(cfg config.Config) {
 	sess := awsSession(cfg.AwsProfile)
 	client := s3Client(sess)
 	objects, _ := objectsInBucket(client, cfg)

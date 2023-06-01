@@ -11,9 +11,6 @@ Distributed notes using your favorite editor (Neovim, of course)
 
 #### TODO
 
-- `list` command:
-    - sync first
-    - sort by latest modified first
 - add `rename` command:
   - change name of a file locally/remotely
 - add `archive` command:
