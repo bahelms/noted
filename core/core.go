@@ -38,11 +38,16 @@ func OpenFile(cfg config.Config, filename string) {
 }
 
 // DeleteFile removes the specified file locally
-func DeleteFile(cfg config.Config, filename string) {
+func DeleteFile(cfg config.Config, filename string) error {
 	filename = ensureExtension(filename)
 	fp := cfg.LocalFilePath(filename)
-	os.Remove(fp)
-	deleteExternalFile(cfg, filename)
+	if err := os.Remove(fp); err != nil {
+		return fmt.Errorf("error deleting local file: %w", err)
+	}
+	if err := deleteExternalFile(cfg, filename); err != nil {
+		return fmt.Errorf("error deleting remote file: %w", err)
+	}
+	return nil
 }
 
 // ListFiles prints all local files to STDOUT
