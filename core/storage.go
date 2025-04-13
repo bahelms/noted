@@ -107,7 +107,7 @@ func downloadFile(filepath string, objectKey string, bucketName string, sess *se
 	}
 }
 
-func deleteExternalFile(cfg config.Config, filename string) {
+func deleteExternalFile(cfg config.Config, filename string) error {
 	sess := awsSession(cfg.AwsProfile)
 	client := s3Client(sess)
 	_, err := client.DeleteObject(
@@ -117,8 +117,9 @@ func deleteExternalFile(cfg config.Config, filename string) {
 		},
 	)
 	if err != nil {
-		fmt.Printf("Error deleting remote file: %v", err)
+		return fmt.Errorf("error deleting remote file: %w", err)
 	}
+	return nil
 }
 
 func contains(s []*s3.Bucket, str string) bool {

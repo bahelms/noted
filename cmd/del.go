@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/bahelms/noted/config"
 	"github.com/bahelms/noted/core"
 	"github.com/spf13/cobra"
@@ -14,7 +17,10 @@ var delCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			cfg := config.New()
-			core.DeleteFile(cfg, args[0])
+			if err := core.DeleteFile(cfg, args[0]); err != nil {
+				fmt.Printf("Error: %v\n", err)
+				os.Exit(1)
+			}
 		} else {
 			cmd.Help()
 		}
