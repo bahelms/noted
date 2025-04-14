@@ -16,6 +16,8 @@ import (
 var cfg = config.Config{
 	LocalStorageDir: ".noted_tests",
 	Editor:          "cat",
+	AwsProfile:      "test",
+	S3BucketName:    "test-bucket",
 }
 
 var fileCases = []struct {
@@ -83,13 +85,66 @@ func TestOpenFileDoesNotCreateFilesIfTheyExist(t *testing.T) {
 }
 
 func TestDeleteFileRemovesLocallyStoredFile(t *testing.T) {
+	// Mock the DeleteExternalFile function to succeed
+	originalDeleteExternalFile := core.DeleteExternalFile
+	defer func() { core.DeleteExternalFile = originalDeleteExternalFile }()
+	core.DeleteExternalFile = func(cfg config.Config, filename string) error {
+		return nil
+	}
+
 	for _, testCase := range fileCases {
 		path := createLocalFile(testCase.expected, "")
 
-		core.DeleteFile(cfg, testCase.input)
-		if _, err := os.Stat(path); os.IsExist(err) {
+		err := core.DeleteFile(cfg, testCase.input)
+		if err != nil {
+			t.Errorf("Unexpected error deleting file: %v", err)
+		}
+		if _, err := os.Stat(path); !os.IsNotExist(err) {
 			t.Errorf("%s was not deleted.", path)
 		}
+	}
+}
+
+func TestDeleteFileReturnsErrorWhenLocalDeletionFails(t *testing.T) {
+	// Mock the DeleteExternalFile function to succeed
+	originalDeleteExternalFile := core.DeleteExternalFile
+	defer func() { core.DeleteExternalFile = originalDeleteExternalFile }()
+	core.DeleteExternalFile = func(cfg config.Config, filename string) error {
+		return nil
+	}
+
+	// Try to delete a non-existent file
+	nonExistentFile := "non_existent_file.txt"
+	err := core.DeleteFile(cfg, nonExistentFile)
+	if err == nil {
+		t.Error("Expected error when deleting non-existent file")
+	} else if !strings.Contains(err.Error(), "error deleting local file") {
+		t.Errorf("Expected error about local file deletion, got: %v", err)
+	}
+}
+
+func TestDeleteFileReturnsErrorWhenRemoteDeletionFails(t *testing.T) {
+	// Create a file that will be deleted locally
+	path := createLocalFile("test.txt", "")
+
+	// Mock the deleteExternalFile function to return an error
+	originalDeleteExternalFile := core.DeleteExternalFile
+	defer func() { core.DeleteExternalFile = originalDeleteExternalFile }()
+	core.DeleteExternalFile = func(cfg config.Config, filename string) error {
+		return fmt.Errorf("mock S3 deletion error")
+	}
+
+	err := core.DeleteFile(cfg, "test.txt")
+	if err == nil {
+		t.Error("Expected error when remote deletion fails")
+	}
+	if !strings.Contains(err.Error(), "error deleting remote file") {
+		t.Errorf("Expected error about remote file deletion, got: %v", err)
+	}
+
+	// Verify local file was still deleted
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
+		t.Error("Local file should have been deleted despite remote deletion failure")
 	}
 }
 
