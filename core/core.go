@@ -44,7 +44,7 @@ func DeleteFile(cfg config.Config, filename string) error {
 	if err := os.Remove(fp); err != nil {
 		return fmt.Errorf("error deleting local file: %w", err)
 	}
-	if err := deleteExternalFile(cfg, filename); err != nil {
+	if err := DeleteExternalFile(cfg, filename); err != nil {
 		return fmt.Errorf("error deleting remote file: %w", err)
 	}
 	return nil

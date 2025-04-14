@@ -107,7 +107,7 @@ func downloadFile(filepath string, objectKey string, bucketName string, sess *se
 	}
 }
 
-func deleteExternalFile(cfg config.Config, filename string) error {
+var DeleteExternalFile = func(cfg config.Config, filename string) error {
 	sess := awsSession(cfg.AwsProfile)
 	client := s3Client(sess)
 	_, err := client.DeleteObject(
