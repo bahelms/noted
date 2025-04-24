@@ -16,6 +16,8 @@ import (
 var cfg = config.Config{
 	LocalStorageDir: ".noted_tests",
 	Editor:          "cat",
+	AwsProfile:      "test",
+	S3BucketName:    "test-bucket",
 }
 
 var fileCases = []struct {
