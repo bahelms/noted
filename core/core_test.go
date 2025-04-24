@@ -16,8 +16,6 @@ import (
 var cfg = config.Config{
 	LocalStorageDir: ".noted_tests",
 	Editor:          "cat",
-	AwsProfile:      "test",
-	S3BucketName:    "test-bucket",
 }
 
 var fileCases = []struct {
@@ -126,8 +124,9 @@ func TestDeleteFileReturnsErrorWhenLocalDeletionFails(t *testing.T) {
 func TestDeleteFileReturnsErrorWhenRemoteDeletionFails(t *testing.T) {
 	// Create a file that will be deleted locally
 	path := createLocalFile("test.txt", "")
+	defer os.Remove(path)
 
-	// Mock the deleteExternalFile function to return an error
+	// Mock the DeleteExternalFile function to return an error
 	originalDeleteExternalFile := core.DeleteExternalFile
 	defer func() { core.DeleteExternalFile = originalDeleteExternalFile }()
 	core.DeleteExternalFile = func(cfg config.Config, filename string) error {
@@ -137,8 +136,7 @@ func TestDeleteFileReturnsErrorWhenRemoteDeletionFails(t *testing.T) {
 	err := core.DeleteFile(cfg, "test.txt")
 	if err == nil {
 		t.Error("Expected error when remote deletion fails")
-	}
-	if !strings.Contains(err.Error(), "error deleting remote file") {
+	} else if !strings.Contains(err.Error(), "error deleting remote file") {
 		t.Errorf("Expected error about remote file deletion, got: %v", err)
 	}
 

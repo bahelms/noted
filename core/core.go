@@ -41,6 +41,12 @@ func OpenFile(cfg config.Config, filename string) {
 func DeleteFile(cfg config.Config, filename string) error {
 	filename = ensureExtension(filename)
 	fp := cfg.LocalFilePath(filename)
+
+	// Check if file exists before trying to delete it
+	if _, err := os.Stat(fp); os.IsNotExist(err) {
+		return fmt.Errorf("error deleting local file: file does not exist")
+	}
+
 	if err := os.Remove(fp); err != nil {
 		return fmt.Errorf("error deleting local file: %w", err)
 	}
